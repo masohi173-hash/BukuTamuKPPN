@@ -1,0 +1,308 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Merriweather:wght@700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--color-background-tertiary);padding:0}
+.wrap{max-width:680px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.hero{background:#0C447C;border-radius:16px;padding:1.75rem 1.5rem 1.5rem;margin-bottom:1rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:#185FA5;opacity:.4}
+.hero::after{content:'';position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;border-radius:50%;background:#185FA5;opacity:.3}
+.hero-badge{display:inline-block;background:rgba(255,255,255,0.15);color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:.75rem;border:1px solid rgba(255,255,255,0.2)}
+.hero h1{font-family:'Merriweather',serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:.3rem;position:relative;z-index:1}
+.hero p{font-size:13px;color:rgba(255,255,255,0.75);position:relative;z-index:1}
+.card{background:var(--color-background-primary);border:1px solid #B5D4F4;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
+.card-icon{width:32px;height:32px;border-radius:8px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.card-title{font-size:13px;font-weight:600;color:#0C447C;text-transform:uppercase;letter-spacing:.06em}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.field:last-child{margin-bottom:0}
+.field label{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.opt{font-size:11px;font-weight:400;color:var(--color-text-tertiary);margin-left:4px}
+.field input,.field select,.field textarea{width:100%;padding:0 13px;border:1.5px solid #B5D4F4;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--color-text-primary);background:#F0F7FF;outline:none;appearance:none;-webkit-appearance:none;transition:border-color .15s,background .15s}
+.field input,.field select{height:42px}
+.field textarea{padding:10px 13px;resize:vertical;min-height:80px;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--color-text-tertiary)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#378ADD;background:var(--color-background-primary);box-shadow:0 0 0 3px rgba(55,138,221,0.12)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23378ADD' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:#F0F7FF;padding-right:36px;cursor:pointer}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:480px){.two-col{grid-template-columns:1fr}}
+.cam-frame{position:relative;width:100%;aspect-ratio:4/3;background:#EAF4FF;border-radius:12px;border:1.5px dashed #85B7EB;overflow:hidden;display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer;transition:border-color .2s,background .2s}
+.cam-frame:hover{border-color:#378ADD;background:#DAEEFF}
+.cam-placeholder{display:flex;flex-direction:column;align-items:center;gap:12px;color:#185FA5;text-align:center;padding:1rem;user-select:none}
+.cam-placeholder-icon{width:64px;height:64px;border-radius:50%;background:#B5D4F4;display:flex;align-items:center;justify-content:center}
+.cam-placeholder p{font-size:14px;font-weight:500;color:#185FA5}
+.cam-placeholder span{font-size:12px;color:#378ADD}
+video#vid{width:100%;height:100%;object-fit:cover;display:none;transform:scaleX(-1)}
+canvas#snap{width:100%;height:100%;object-fit:cover;display:none}
+.cam-live-badge{position:absolute;top:10px;left:10px;background:#E24B4A;color:#fff;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:none;align-items:center;gap:5px;letter-spacing:.03em}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#fff}
+.cam-bottom{display:flex;flex-direction:column;align-items:center;gap:8px}
+.btn-capture{display:flex;align-items:center;gap:8px;background:#185FA5;color:#fff;border:none;border-radius:12px;padding:0 24px;height:48px;font-size:15px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:background .15s,transform .1s;width:100%;justify-content:center}
+.btn-capture:hover{background:#0C447C}
+.btn-capture:active{transform:scale(0.98)}
+.btn-sm{display:flex;align-items:center;gap:6px;background:var(--color-background-secondary);color:var(--color-text-primary);border:1px solid #B5D4F4;border-radius:8px;padding:0 14px;height:36px;font-size:13px;font-weight:500;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:background .15s}
+.btn-sm:hover{background:#E6F1FB}
+.cam-btns-row{display:flex;gap:8px;width:100%;justify-content:center}
+.photo-ok{display:none;align-items:center;gap:6px;font-size:13px;color:#0F6E56;font-weight:500;background:#E1F5EE;border-radius:8px;padding:6px 14px;border:1px solid #9FE1CB}
+.photo-ok-dot{width:7px;height:7px;border-radius:50%;background:#1D9E75}
+#camHint{font-size:12px;color:var(--color-text-secondary);text-align:center}
+.btn-submit{width:100%;height:48px;border-radius:12px;font-size:15px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;background:#0C447C;color:#fff;border:none;transition:background .15s,transform .1s;margin-top:1rem;letter-spacing:.01em}
+.btn-submit:hover{background:#185FA5}
+.btn-submit:active{transform:scale(0.99)}
+.btn-submit:disabled{background:#888;cursor:not-allowed;opacity:.7}
+.sending-bar{display:none;align-items:center;gap:10px;justify-content:center;margin-top:1rem;font-size:13px;color:#185FA5;font-weight:500}
+.spinner{width:18px;height:18px;border:2px solid #B5D4F4;border-top-color:#185FA5;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.success-wrap{display:none;flex-direction:column;align-items:center;text-align:center;padding:2rem 1rem}
+.success-anim{width:80px;height:80px;border-radius:50%;background:#E1F5EE;border:2px solid #1D9E75;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;animation:popIn .5s cubic-bezier(.175,.885,.32,1.275) forwards}
+@keyframes popIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.checkmark{stroke-dasharray:50;stroke-dashoffset:50;animation:drawCheck .5s .4s ease forwards}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+.success-wrap h2{font-family:'Merriweather',serif;font-size:22px;color:#085041;margin-bottom:.5rem}
+.success-wrap p{font-size:14px;color:var(--color-text-secondary);margin-bottom:.5rem;line-height:1.6}
+.sheets-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#185FA5;font-weight:500;text-decoration:none;background:#E6F1FB;padding:6px 14px;border-radius:8px;border:1px solid #B5D4F4;margin-bottom:.75rem}
+.countdown-text{font-size:13px;color:#185FA5;font-weight:500}
+.count-num{font-size:18px;font-weight:700;color:#0C447C}
+.progress-bar{width:200px;height:4px;background:#B5D4F4;border-radius:4px;margin:1rem auto 0;overflow:hidden}
+.progress-fill{height:100%;background:#185FA5;border-radius:4px;width:100%;transition:width linear}
+.error-msg{display:none;align-items:center;gap:8px;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:10px 14px;font-size:13px;color:#A32D2D;margin-top:.75rem}
+</style>
+
+<div class="wrap" id="formSection">
+  <div class="hero">
+    <div class="hero-badge">Buku Tamu Digital</div>
+    <h1>Selamat Datang di KPPN Masohi</h1>
+    <p>Kantor Pelayanan Perbendaharaan Negara Masohi</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="card-title">Data Pengunjung</div>
+    </div>
+
+    <div class="field">
+      <label for="nama">Nama Lengkap</label>
+      <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda" />
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label for="satker">Asal Satker</label>
+        <input type="text" id="satker" placeholder="Nama satuan kerja" />
+      </div>
+      <div class="field">
+        <label for="kode">Kode Satker <span class="opt">(opsional)</span></label>
+        <input type="text" id="kode" placeholder="mis. 123456" />
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label for="keperluan">Keperluan</label>
+        <select id="keperluan">
+          <option value="" disabled selected>Pilih keperluan</option>
+          <option value="Konsultasi">Konsultasi</option>
+          <option value="Koordinasi">Koordinasi</option>
+          <option value="Laporan">Laporan</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="pihak">Pihak yang Ingin Ditemui</label>
+        <input type="text" id="pihak" placeholder="Nama pegawai / seksi" />
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:0">
+      <label for="keterangan">Keterangan <span class="opt">(opsional)</span></label>
+      <textarea id="keterangan" placeholder="Tuliskan keterangan tambahan jika diperlukan..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <div class="card-title">Foto Pengunjung</div>
+    </div>
+    <div class="cam-frame" id="camFrame" onclick="handleFrameClick()">
+      <div class="cam-placeholder" id="camPlaceholder">
+        <div class="cam-placeholder-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#185FA5" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <p>Klik untuk membuka kamera</p>
+        <span>Posisikan wajah Anda di dalam frame</span>
+      </div>
+      <video id="vid" autoplay playsinline></video>
+      <canvas id="snap"></canvas>
+      <div class="cam-live-badge" id="liveBadge"><div class="live-dot"></div>LIVE</div>
+    </div>
+    <div id="camHint" style="margin-bottom:10px"></div>
+    <div class="cam-bottom">
+      <button class="btn-capture" id="btnCapture" onclick="handleCaptureBtn()" style="display:none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3" fill="#fff" stroke="none"/></svg>
+        Ambil Foto
+      </button>
+      <div class="cam-btns-row" id="retakeRow" style="display:none">
+        <button class="btn-sm" onclick="retake()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.69"/></svg>
+          Ambil Ulang
+        </button>
+        <button class="btn-sm" onclick="closeCamera()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Tutup
+        </button>
+      </div>
+      <div class="photo-ok" id="photoOk"><div class="photo-ok-dot"></div>Foto berhasil diambil</div>
+    </div>
+  </div>
+
+  <button class="btn-submit" id="btnSubmit" onclick="submitForm()">Kirim Data Kunjungan</button>
+  <div class="sending-bar" id="sendingBar">
+    <div class="spinner"></div>
+    <span id="sendingText">Mengirim data ke Google Sheets...</span>
+  </div>
+  <div class="error-msg" id="errorMsg">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="errorText">Gagal mengirim data. Coba lagi.</span>
+  </div>
+</div>
+
+<div class="success-wrap" id="successSection">
+  <div class="success-anim">
+    <svg width="36" height="36" viewBox="0 0 50 50" fill="none">
+      <polyline class="checkmark" points="12,27 22,37 38,18" stroke="#1D9E75" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h2>Kunjungan Tercatat!</h2>
+  <p id="successMsg">Data Anda telah berhasil disimpan.</p>
+  <a class="sheets-link" href="https://docs.google.com/spreadsheets" target="_blank">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Lihat Google Sheets
+  </a>
+  <p class="countdown-text">Form baru terbuka dalam <span class="count-num" id="countNum">5</span> detik</p>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbzeEr8Bf9se7QOZHFJkGxr5zGYl9PBfkE5j_SNcPVk5UHEHdVhjIh9T9BnDl9J8QGpR/exec';
+let stream=null,fotoOk=false,fotoBase64=null,countTimer=null;
+
+function handleFrameClick(){if(!stream&&!fotoOk)bukaKamera();}
+
+async function bukaKamera(){
+  document.getElementById('camHint').textContent='Meminta akses kamera...';
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1280},height:{ideal:960}},audio:false});
+    const v=document.getElementById('vid');
+    v.srcObject=stream;v.style.display='block';
+    document.getElementById('camPlaceholder').style.display='none';
+    document.getElementById('snap').style.display='none';
+    document.getElementById('liveBadge').style.display='flex';
+    document.getElementById('btnCapture').style.display='flex';
+    document.getElementById('retakeRow').style.display='none';
+    document.getElementById('photoOk').style.display='none';
+    document.getElementById('camFrame').style.cursor='default';
+    document.getElementById('camHint').textContent='Kamera aktif — posisikan wajah di tengah frame lalu klik Ambil Foto';
+    fotoOk=false;fotoBase64=null;
+  }catch(e){
+    document.getElementById('camHint').textContent='Akses kamera ditolak. Berikan izin kamera di browser Anda.';
+  }
+}
+
+function handleCaptureBtn(){if(stream)ambilFoto();}
+
+function ambilFoto(){
+  const v=document.getElementById('vid'),c=document.getElementById('snap');
+  c.width=v.videoWidth||640;c.height=v.videoHeight||480;
+  const ctx=c.getContext('2d');
+  ctx.save();ctx.translate(c.width,0);ctx.scale(-1,1);ctx.drawImage(v,0,0,c.width,c.height);ctx.restore();
+  fotoBase64=c.toDataURL('image/jpeg',0.7);
+  v.style.display='none';c.style.display='block';
+  document.getElementById('liveBadge').style.display='none';
+  document.getElementById('btnCapture').style.display='none';
+  document.getElementById('retakeRow').style.display='flex';
+  document.getElementById('photoOk').style.display='flex';
+  document.getElementById('camHint').textContent='';
+  fotoOk=true;
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+}
+
+function retake(){
+  document.getElementById('snap').style.display='none';
+  document.getElementById('photoOk').style.display='none';
+  document.getElementById('retakeRow').style.display='none';
+  fotoOk=false;fotoBase64=null;bukaKamera();
+}
+
+function closeCamera(){
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
+  document.getElementById('vid').style.display='none';
+  document.getElementById('snap').style.display='none';
+  document.getElementById('camPlaceholder').style.display='flex';
+  document.getElementById('liveBadge').style.display='none';
+  document.getElementById('btnCapture').style.display='none';
+  document.getElementById('retakeRow').style.display='none';
+  document.getElementById('photoOk').style.display='none';
+  document.getElementById('camHint').textContent='';
+  document.getElementById('camFrame').style.cursor='pointer';
+  fotoOk=false;fotoBase64=null;
+}
+
+async function submitForm(){
+  const nama=document.getElementById('nama').value.trim();
+  const satker=document.getElementById('satker').value.trim();
+  const keperluan=document.getElementById('keperluan').value;
+  const pihak=document.getElementById('pihak').value.trim();
+  if(!nama){alert('Nama lengkap wajib diisi.');document.getElementById('nama').focus();return;}
+  if(!satker){alert('Asal Satker wajib diisi.');document.getElementById('satker').focus();return;}
+  if(!keperluan){alert('Silakan pilih keperluan kunjungan.');document.getElementById('keperluan').focus();return;}
+  if(!pihak){alert('Pihak yang ingin ditemui wajib diisi.');document.getElementById('pihak').focus();return;}
+  if(!fotoOk){alert('Silakan ambil foto terlebih dahulu.');return;}
+
+  const btn=document.getElementById('btnSubmit');
+  const bar=document.getElementById('sendingBar');
+  const errEl=document.getElementById('errorMsg');
+  btn.disabled=true;bar.style.display='flex';errEl.style.display='none';
+
+  const payload={
+    nama,
+    satker,
+    kode:document.getElementById('kode').value.trim(),
+    keperluan,
+    pihak,
+    keterangan:document.getElementById('keterangan').value.trim(),
+    foto:fotoBase64
+  };
+
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    showSuccess(nama,keperluan);
+  }catch(err){
+    btn.disabled=false;bar.style.display='none';errEl.style.display='flex';
+    document.getElementById('errorText').textContent='Gagal mengirim data. Periksa koneksi dan coba lagi.';
+  }
+}
+
+function showSuccess(nama,keperluan){
+  document.getElementById('sendingBar').style.display='none';
+  const waktu=new Date().toLocaleString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('successMsg').textContent=nama+' — '+keperluan+' | '+waktu;
+  document.getElementById('formSection').style.display='none';
+  const ss=document.getElementById('successSection');ss.style.display='flex';
+  let sisa=5;
+  document.getElementById('countNum').textContent=sisa;
+  const pf=document.getElementById('progressFill');
+  pf.style.transition='none';pf.style.width='100%';
+  setTimeout(()=>{pf.style.transition='width '+sisa+'s linear';pf.style.width='0%';},50);
+  countTimer=setInterval(()=>{sisa--;document.getElementById('countNum').textContent=sisa;if(sisa<=0){clearInterval(countTimer);resetAll();}},1000);
+}
+
+function resetAll(){
+  ['nama','satker','kode','keterangan','pihak'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('keperluan').value='';
+  document.getElementById('btnSubmit').disabled=false;
+  closeCamera();
+  document.getElementById('successSection').style.display='none';
+  document.getElementById('formSection').style.display='block';
+}
+</script>
